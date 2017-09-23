@@ -2,10 +2,10 @@
 
 process.env.NODE_ENV = 'test';
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../bin/www');
-let should = chai.should();
+let chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    server = require('../bin/www'),
+    should = chai.should();
 
 const describe = require("mocha").describe,
     it = require("mocha").it;
