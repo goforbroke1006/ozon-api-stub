@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-
+// API's routes
 app.use('/PartnerService/ClientService', psClientServiceAPI);
 
 // catch 404 and forward to error handler
