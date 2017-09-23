@@ -3,10 +3,12 @@
 process.env.NODE_ENV = 'test';
 
 let chai = require('chai');
-const describe = require("mocha").describe;
 let chaiHttp = require('chai-http');
 let server = require('../bin/www');
 let should = chai.should();
+
+const describe = require("mocha").describe,
+    it = require("mocha").it;
 
 chai.use(chaiHttp);
 
@@ -16,9 +18,9 @@ describe('PartnerService', () => {
         describe('ClientCheckEmail', () => {
             it('should do email check', (done) => {
                 let clientData = {
-                    "login": "",
-                    "password": "",
-                    "email": "",
+                    "login": "test",
+                    "password": "test",
+                    "email": "test@test.test",
                 };
                 chai.request(server)
                     .post('/PartnerService/ClientService/ClientCheckEmail/')
@@ -26,6 +28,9 @@ describe('PartnerService', () => {
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
+                        res.body.should.to.have.own.property('Status');
+                        res.body.should.to.have.own.property('Error');
+                        res.body.should.to.have.not.own.property('Wildfowl');
                         done();
                     });
             });
