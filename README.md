@@ -7,4 +7,5 @@ Ozon has not test environment, so I going to realize my own test app.
 1. PartnerService
 
     1. ClientService (not finished)
-    2. ...
+    2. CheckoutService (not finished)
+    3. ...

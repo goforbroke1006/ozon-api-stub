@@ -14,14 +14,15 @@ var Promise = require('bluebird');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-let psClientServiceAPI = require('./api/routes/partner-service/client-service');
+let psClientServiceAPI = require('./api/routes/partner-service/client-service'),
+    psCheckoutServiceAPI = require('./api/routes/partner-service/checkout-service');
 
 var app = express();
 
 // Prepare database for work
 Promise.resolve()
     .then(() => db.open('./data/oas.sqlite'))
-    .then(() => db.migrate({ force: 'last' }))
+    .then(() => db.migrate({force: 'last'}))
     .catch((err) => console.error(err.stack));
 
 // view engine setup
@@ -41,6 +42,7 @@ app.use('/users', users);
 
 // API's routes
 app.use('/PartnerService/ClientService', psClientServiceAPI);
+app.use('/PartnerService/CheckoutService', psCheckoutServiceAPI);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -14,7 +14,6 @@ chai.use(chaiHttp);
 
 describe('PartnerService', () => {
     describe('ClientService', () => {
-
         describe('ClientCheckEmail', () => {
             it('should do email check', (done) => {
                 let clientData = {
@@ -35,7 +34,6 @@ describe('PartnerService', () => {
                     });
             });
         });
-
         describe('PartnerClientRegistration', () => {
             it('should do registration with data', (done) => {
                 let clientData = {
@@ -57,10 +55,33 @@ describe('PartnerService', () => {
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.should.be.a('object');
+                        res.body.should.to.have.own.property('Status');
+                        res.body.should.to.have.own.property('Error');
                         done();
                     });
             })
         });
+    });
 
+    describe('CheckoutService', () => {
+        describe('CheckoutStart', () => {
+            it('should start order building', (done) => {
+                let clientData = {
+                    "login": "",
+                    "password": "",
+                    "partnerClientId": "user001",
+                    "isPredRelease": false,
+                };
+                chai.request(server)
+                    .get('/PartnerService/CheckoutService/CheckoutStart/')
+                    .send(clientData)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.Status.should.to.equal(2);
+                        done();
+                    });
+            })
+        });
     });
 });
