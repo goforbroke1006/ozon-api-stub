@@ -12,28 +12,50 @@ chai.use(chaiHttp);
 
 describe('PartnerService', () => {
     describe('ClientService', () => {
-        it('should do registration with data', (done) => {
-            let clientData = {
-                "login": "",
-                "password": "",
-                "partnerClientId": "",
-                "email": "",
-                "clientPassword": "",
-                "firstName": "",
-                "lastName": "",
-                "middleName": "",
-                "spamSubscribe": "",
-                "userIp": "",
-                "userAgent": "",
-            };
-            chai.request(server)
-                .post('/PartnerService/ClientService/PartnerClientRegistration/')
-                .send(clientData)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    done();
-                });
-        })
+
+        describe('ClientCheckEmail', () => {
+            it('should do email check', (done) => {
+                let clientData = {
+                    "login": "",
+                    "password": "",
+                    "email": "",
+                };
+                chai.request(server)
+                    .post('/PartnerService/ClientService/ClientCheckEmail/')
+                    .send(clientData)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        done();
+                    });
+            });
+        });
+
+        describe('PartnerClientRegistration', () => {
+            it('should do registration with data', (done) => {
+                let clientData = {
+                    "login": "",
+                    "password": "",
+                    "partnerClientId": "",
+                    "email": "",
+                    "clientPassword": "",
+                    "firstName": "",
+                    "lastName": "",
+                    "middleName": "",
+                    "spamSubscribe": "",
+                    "userIp": "",
+                    "userAgent": "",
+                };
+                chai.request(server)
+                    .post('/PartnerService/ClientService/PartnerClientRegistration/')
+                    .send(clientData)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        done();
+                    });
+            })
+        });
+
     });
 });
