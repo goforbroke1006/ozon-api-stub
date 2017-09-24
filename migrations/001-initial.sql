@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 
 create table ps__client (
-    `partnerClientId`   varchar(255) primary key unique not null,
+    `partnerClientId`   varchar(255) primary key not null,
     `email`             varchar(255) unique not null,
     `clientPassword`    varchar(255) not null,
 
@@ -22,9 +22,17 @@ create table ps__discount_code (
     foreign key (`client`) references ps__client(`partnerClientId`)
 );
 
+create table ps__checkout (
+    `guidValue`         varchar(512) not null primary key,
+    `partnerClientId`   varchar(255) not null,
+
+    foreign key (`partnerClientId`) references ps__client(`partnerClientId`)
+);
+
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
 
+drop table ps__checkout;
 drop table ps__discount_code;
 drop table ps__client;

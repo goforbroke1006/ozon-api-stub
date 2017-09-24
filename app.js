@@ -1,29 +1,34 @@
 "use strict";
 require('babel-polyfill');
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const
+    express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
 
-var db = require('sqlite/legacy');
-var Promise = require('bluebird');
+    config = require('config'),
+    db = require('sqlite/legacy'),
+    Promise = require('bluebird');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const
+    index = require('./routes/index'),
+    users = require('./routes/users');
 
-let psClientServiceAPI = require('./api/routes/partner-service/client-service'),
+const
+    psClientServiceAPI = require('./api/routes/partner-service/client-service'),
     psCheckoutServiceAPI = require('./api/routes/partner-service/checkout-service');
 
-var app = express();
 
 // Prepare database for work
 Promise.resolve()
-    .then(() => db.open('./data/oas.sqlite'))
+    .then(() => db.open(config.database.file))
     .then(() => db.migrate({force: 'last'}))
     .catch((err) => console.error(err.stack));
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,10 +42,38 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Web-page links
 app.use('/', index);
 app.use('/users', users);
 
-// API's routes
+// API routes
+app.use(express.Router().all('/PartnerService/*', function (req, res, next) {
+    let partnerClientId = null;
+    if (undefined !== req.query.partnerClientId)
+        partnerClientId = req.query.partnerClientId;
+    if (undefined !== req.body.partnerClientId)
+        partnerClientId = req.body.partnerClientId;
+
+    if (
+        (
+            typeof partnerClientId === 'string'
+            || partnerClientId instanceof String
+        )
+        && partnerClientId.length === 0) {
+        let error = new Error('Unexpected empty partnerClientId');
+        error.status = 401;
+        next(error);
+    }
+
+    // TODO: get user from DB by partnerClientId and throw exception if not found!
+    const client = null;
+
+    if (null !== client) {
+        // next(new Error('Not found client with id = ' + partnerClientId));
+    }
+
+    next();
+}));
 app.use('/PartnerService/ClientService', psClientServiceAPI);
 app.use('/PartnerService/CheckoutService', psCheckoutServiceAPI);
 
