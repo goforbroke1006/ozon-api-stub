@@ -9,7 +9,7 @@ create table ps__client (
 
     `lastName`          varchar(255) not null,
     `firstName`         varchar(255) not null,
-    `middleName`        varchar(255) not null,
+    `middleName`        varchar(255),
 
     `SpamSubscribe`     numeric default  0 check (SpamSubscribe IN (0, 1))
 );

@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const
+    express = require('express'),
+    router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Ozon API stub' });
+router.get('/', function (req, res, next) {
+    res.render('index', {title: 'Ozon API stub'});
 });
 
 module.exports = router;

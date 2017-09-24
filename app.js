@@ -19,6 +19,8 @@ const
 
 const
     psClientServiceAPI = require('./api/routes/partner-service/client-service'),
+    psCartServiceAPI = require('./api/routes/partner-service/cart-service'),
+    psCheckoutServiceValidationAPI = require('./api/routes/partner-service/checkout-service-validation'),
     psCheckoutServiceAPI = require('./api/routes/partner-service/checkout-service');
 
 
@@ -47,39 +49,16 @@ app.use('/', index);
 app.use('/users', users);
 
 // API routes
-app.use(express.Router().all('/PartnerService/*', function (req, res, next) {
-    let partnerClientId = null;
-    if (undefined !== req.query.partnerClientId)
-        partnerClientId = req.query.partnerClientId;
-    if (undefined !== req.body.partnerClientId)
-        partnerClientId = req.body.partnerClientId;
+app.use("/PartnerService", require("./api/routes/common-validation"));
 
-    if (
-        (
-            typeof partnerClientId === 'string'
-            || partnerClientId instanceof String
-        )
-        && partnerClientId.length === 0) {
-        let error = new Error('Unexpected empty partnerClientId');
-        error.status = 401;
-        next(error);
-    }
-
-    // TODO: get user from DB by partnerClientId and throw exception if not found!
-    const client = null;
-
-    if (null !== client) {
-        // next(new Error('Not found client with id = ' + partnerClientId));
-    }
-
-    next();
-}));
-app.use('/PartnerService/ClientService', psClientServiceAPI);
-app.use('/PartnerService/CheckoutService', psCheckoutServiceAPI);
+app.use("/PartnerService/ClientService", psClientServiceAPI);
+app.use("/PartnerService/CartService", psCartServiceAPI.router);
+app.use("/PartnerService/CheckoutService", psCheckoutServiceValidationAPI);
+app.use("/PartnerService/CheckoutService", psCheckoutServiceAPI);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err = new Error("Not Found");
     err.status = 404;
     next(err);
 });
