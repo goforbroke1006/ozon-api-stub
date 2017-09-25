@@ -23,18 +23,30 @@ const
     psCheckoutServiceValidationAPI = require('./api/routes/partner-service/checkout-service-validation'),
     psCheckoutServiceAPI = require('./api/routes/partner-service/checkout-service');
 
+const app = express();
 
 // Prepare database for work
 Promise.resolve()
-    .then(() => db.open(config.database.file))
-    .then(() => db.migrate({force: 'last'}))
+    .then(() => {
+        db.open(config.database.file);
+        app.set('db', db);
+    })
+    .then(() => {
+        db.migrate({force: 'last', cache: false});
+        app.set('db', db);
+    })
     .catch((err) => console.error(err.stack));
 
-const app = express();
+// var sqlite3 = require('sqlite3').verbose();
+// var db = new sqlite3.Database(':memory:');
+// var db = new sqlite3.Database(config.database.file);
+// var migration = require('db-migrate-sqlite3/index');
+// var dbm = require('db-')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.set('config', config);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

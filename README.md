@@ -2,6 +2,8 @@
 
 Ozon has not test environment, so I going to realize my own test app.
 
+    npm install node-pre-gyp -g
+
 ### Requirements
 
 1. Node 4.2.6+

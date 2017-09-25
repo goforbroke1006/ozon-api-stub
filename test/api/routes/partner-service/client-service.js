@@ -15,11 +15,11 @@ chai.use(chaiHttp);
 
 describe("PartnerService -> ClientService", () => {
     describe("ClientCheckEmail", () => {
-        it('should do email check', (done) => {
+        it('should find client with existing email', (done) => {
             let clientData = {
                 login: "test",
                 password: "test",
-                email: "test@test.test",
+                email: "pci001@oa.stub",
             };
             chai.request(server)
                 .post("/PartnerService/ClientService/ClientCheckEmail/")
@@ -30,6 +30,27 @@ describe("PartnerService -> ClientService", () => {
                     res.body.should.to.have.own.property("Status");
                     res.body.should.to.have.own.property("Error");
                     res.body.should.to.have.not.own.property("Wildfowl");
+                    res.body.Status.should.be.equal(1);
+                    res.body.Error.should.be.equal("Email already exists!");
+                    done();
+                });
+        });
+        it('should not find by some not existing email', (done) => {
+            let clientData = {
+                login: "test",
+                password: "test",
+                email: "wildfowl-666@oa.stub",
+            };
+            chai.request(server)
+                .post("/PartnerService/ClientService/ClientCheckEmail/")
+                .send(clientData)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.to.have.own.property("Status");
+                    res.body.should.to.have.own.property("Error");
+                    res.body.Status.should.be.equal(2);
+                    // TODO: check Error === null
                     done();
                 });
         });
