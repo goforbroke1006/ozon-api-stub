@@ -1,5 +1,5 @@
 {
   "database": {
-    "file": "./data/dev.sqlite"
+    "file": "./data/dev20.sqlite"
   }
 }

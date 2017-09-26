@@ -1,0 +1,19 @@
+"use strict";
+
+let mongoose = require("mongoose");
+let Schema = mongoose.Schema;
+
+let ClientSchema = new Schema({
+    partnerClientId: String,
+    email: String,
+    clientPassword: String,
+
+    lastName: String,
+    firstName: String,
+    middleName: String,
+
+    SpamSubscribe: Boolean,
+});
+
+// module.exports = mongoose.model('Client', ClientSchema);
+module.exports = mongoose.model('client', ClientSchema);

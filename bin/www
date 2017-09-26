@@ -8,6 +8,9 @@ var app = require('../app');
 var debug = require('debug')('ozon-api-stub:server');
 var http = require('http');
 
+const Promise = require("bluebird"),
+    mongoose = require("mongoose");
+
 /**
  * Get port from environment and store in Express.
  */
@@ -18,14 +21,50 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
+/*const db = require("./../db").init(app);
+Promise.resolve()
+    .then(db)
+    .then(() => {
+        app.set('db', db);
+        server.listen(port);
+        console.log("Run app");
+    })
+    .catch((err) => {
+        console.error(err.stack);
+        process.exit(1);
+    });*/
+/*const db = require("./../db").db;
+Promise.resolve()
+    .then(db)
+    .then(() => {
+        app.set('db', db);
+        server.listen(port);
+        console.log("Run app");
+    })
+    .catch((err) => {
+        console.error(err.stack);
+        process.exit(1);
+    });
+app.set('db', db);*/
 
-server.listen(port);
+Promise.resolve()
+    .then(() => {
+        mongoose.createConnection('mongodb://127.0.0.1/oas', {
+            useMongoClient: true,
+        })
+    })
+    .then((db) => {
+        app.set('db', db);
+        server.listen(port);
+        console.log("Run app");
+    })
+    .catch((err) => console.error(err.stack));
+
 server.on('error', onError);
 server.on('listening', onListening);
 

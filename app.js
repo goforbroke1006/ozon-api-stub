@@ -9,9 +9,9 @@ const
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
 
-    config = require('config'),
-    db = require('sqlite/legacy'),
-    Promise = require('bluebird');
+    config = require('config');
+    // db = require('sqlite/legacy'),
+    // Promise = require('bluebird');
 
 const
     index = require('./routes/index'),
@@ -26,16 +26,16 @@ const
 const app = express();
 
 // Prepare database for work
-Promise.resolve()
-    .then(() => {
-        db.open(config.database.file);
-        app.set('db', db);
-    })
-    .then(() => {
-        db.migrate({force: 'last', cache: false});
-        app.set('db', db);
-    })
-    .catch((err) => console.error(err.stack));
+// Promise.resolve()
+//     .then(() => {
+//         db.open(config.database.file);
+//         app.set('db', db);
+//     })
+//     .then(() => {
+//         db.migrate({force: 'last', cache: false});
+//         app.set('db', db);
+//     })
+//     .catch((err) => console.error(err.stack));
 
 // var sqlite3 = require('sqlite3').verbose();
 // var db = new sqlite3.Database(':memory:');
