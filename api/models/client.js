@@ -4,8 +4,14 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let ClientSchema = new Schema({
-    partnerClientId: String,
-    email: String,
+    partnerClientId: {
+        type: String,
+        unique: true
+    },
+    email: {
+        type: String,
+        unique: true
+    },
     clientPassword: String,
 
     lastName: String,

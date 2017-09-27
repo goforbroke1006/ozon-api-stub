@@ -2,18 +2,31 @@
 
 process.env.NODE_ENV = "test";
 
-let chai = require("chai"),
+let mocha = require("mocha"),
+    chai = require("chai"),
     chaiHttp = require("chai-http"),
     server = require("./../../../../bin/www").server,
     app = require("./../../../../bin/www").app,
     should = chai.should(),
-    Promise = require('bluebird'),
-    describe = require("mocha").describe,
-    it = require("mocha").it;
+    Promise = require("bluebird"),
+    describe = mocha.describe,
+    it = mocha.it,
+    beforeEach = mocha.beforeEach,
+    afterEach = mocha.afterEach;
 
 chai.use(chaiHttp);
 
 describe("PartnerService -> ClientService", () => {
+    beforeEach(() => {
+        let Client = app.get("db").model("client");
+        Client.find({}).remove().exec();
+    });
+
+    afterEach(() => {
+        let Client = app.get("db").model("client");
+        Client.find({}).remove().exec();
+    });
+
     describe("ClientCheckEmail", () => {
         it('should find client with existing email', (done) => {
 
@@ -24,7 +37,6 @@ describe("PartnerService -> ClientService", () => {
 
             Promise.resolve()
                 .then(() => {
-                    // add fake client
                     let client = new Client({
                         partnerClientId: 'pci-001',
                         email: emailForTest,
@@ -39,7 +51,6 @@ describe("PartnerService -> ClientService", () => {
                     client.save();
                 })
                 .then(() => {
-                    // try to check is free fake email
                     let clientData = {
                         login: "test",
                         password: "test",
@@ -51,68 +62,63 @@ describe("PartnerService -> ClientService", () => {
                             .send(clientData)
                             .end((err, res) => {
                                 res.should.have.status(200);
-                                res.body.should.be.a('object');
+                                res.body.should.be.a("object");
                                 res.body.should.to.have.own.property("Status");
                                 res.body.should.to.have.own.property("Error");
                                 res.body.should.to.have.not.own.property("Wildfowl");
+
                                 res.body.Status.should.be.equal(1);
                                 res.body.Error.should.be.equal("Email already exists!");
+
+                                done(); // send asserting ready signal
+                                resolve(); // resolve promise for move to next "then" block
+                            });
+                    });
+                })
+                .catch((err) => console.error(err.stack));
+        });
+    });
+
+    describe("PartnerClientRegistration", () => {
+        it("should do registration with data", (done) => {
+            let Client = app.get("db").model("client");
+
+            let emailForTest = "hello.world@hw.org";
+
+            Promise.resolve()
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        let clientData = {
+                            login: "test",
+                            password: "test",
+                            partnerClientId: "qweetwrte",
+                            email: emailForTest,
+                            clientPassword: "890123",
+                            firstName: "Vladimir",
+                            lastName: "Petrov",
+                            middleName: "",
+                            spamSubscribe: 0,
+                            userIp: "123.123.123.123",
+                            userAgent: "Some user agent",
+                        };
+                        chai.request(server)
+                            .post("/PartnerService/ClientService/PartnerClientRegistration/")
+                            .send(clientData)
+                            .end((err, res) => {
+                                res.should.have.status(200);
+                                res.body.should.be.a("object");
+                                res.body.should.to.have.own.property("Status");
+                                res.body.should.to.have.own.property("Error");
+
+                                res.body.Status.should.be.equal(2, res.body.Error);
+
                                 done();
                                 resolve();
                             });
                     });
                 })
-                .then(() => {
-                    // remove fake client
-                    Client.find({email: emailForTest}).remove().exec();
-                })
                 .catch((err) => console.error(err.stack));
         });
-        it('should not find by some not existing email', (done) => {
-            let clientData = {
-                login: "test",
-                password: "test",
-                email: "wildfowl-666@oa.stub",
-            };
-            chai.request(server)
-                .post("/PartnerService/ClientService/ClientCheckEmail/")
-                .send(clientData)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.to.have.own.property("Status");
-                    res.body.should.to.have.own.property("Error");
-                    res.body.Status.should.be.equal(2);
-                    // TODO: check Error === null
-                    done();
-                });
-        });
     });
-    describe('PartnerClientRegistration', () => {
-        it('should do registration with data', (done) => {
-            let clientData = {
-                login: "",
-                password: "",
-                partnerClientId: "qweetwrte",
-                email: "",
-                clientPassword: "",
-                firstName: "",
-                lastName: "",
-                middleName: "",
-                spamSubscribe: "",
-                userIp: "",
-                userAgent: "",
-            };
-            chai.request(server)
-                .post("/PartnerService/ClientService/PartnerClientRegistration/")
-                .send(clientData)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.to.have.own.property('Status');
-                    res.body.should.to.have.own.property('Error');
-                    done();
-                });
-        })
-    });
+
 });
