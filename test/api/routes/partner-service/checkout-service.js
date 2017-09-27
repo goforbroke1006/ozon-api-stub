@@ -4,7 +4,7 @@ process.env.NODE_ENV = "test";
 
 let chai = require("chai"),
     chaiHttp = require("chai-http"),
-    server = require("./../../../../bin/www"),
+    server = require("./../../../../bin/www").server,
     should = chai.should();
 
 const

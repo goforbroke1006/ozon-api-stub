@@ -4,17 +4,12 @@ process.env.NODE_ENV = "test";
 
 let chai = require("chai"),
     chaiHttp = require("chai-http"),
-    server = require("./../../../../bin/www"),
-    should = chai.should();
-
-const
+    server = require("./../../../../bin/www").server,
+    app = require("./../../../../bin/www").app,
+    should = chai.should(),
+    Promise = require('bluebird'),
     describe = require("mocha").describe,
     it = require("mocha").it;
-
-const
-    Promise = require('bluebird'),
-    mongoose = require('mongoose'),
-    ClientSchema = require("./../../../../api/models/client");
 
 chai.use(chaiHttp);
 
@@ -22,15 +17,21 @@ describe("PartnerService -> ClientService", () => {
     describe("ClientCheckEmail", () => {
         it('should find client with existing email', (done) => {
 
+            let db = app.get("db"),
+                Client = db.model("client");
+
+            let emailForTest = "ChuckNorrisWillFindYouO_o@ChuckNorris.ChuckNorris";
+
             Promise.resolve()
                 .then(() => {
-                    let client = new ClientSchema({
-                        partnerClientId: 'Chuck-Norris',
-                        email: "ChuckNorris@ChuckNorris.ChuckNorris",
-                        clientPassword: "run",
+                    // add fake client
+                    let client = new Client({
+                        partnerClientId: 'pci-001',
+                        email: emailForTest,
+                        clientPassword: "123456",
 
-                        lastName: "Norris",
-                        firstName: "Chuck",
+                        lastName: "Some last name",
+                        firstName: "Some first name",
                         middleName: "",
 
                         SpamSubscribe: 1,
@@ -38,24 +39,32 @@ describe("PartnerService -> ClientService", () => {
                     client.save();
                 })
                 .then(() => {
+                    // try to check is free fake email
                     let clientData = {
                         login: "test",
                         password: "test",
-                        email: "ChuckNorris@ChuckNorris.ChuckNorris",
+                        email: emailForTest,
                     };
-                    chai.request(server)
-                        .post("/PartnerService/ClientService/ClientCheckEmail/")
-                        .send(clientData)
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            res.body.should.be.a('object');
-                            res.body.should.to.have.own.property("Status");
-                            res.body.should.to.have.own.property("Error");
-                            res.body.should.to.have.not.own.property("Wildfowl");
-                            res.body.Status.should.be.equal(1);
-                            res.body.Error.should.be.equal("Email already exists!");
-                            done();
-                        });
+                    return new Promise((resolve, reject) => {
+                        chai.request(server)
+                            .post("/PartnerService/ClientService/ClientCheckEmail/")
+                            .send(clientData)
+                            .end((err, res) => {
+                                res.should.have.status(200);
+                                res.body.should.be.a('object');
+                                res.body.should.to.have.own.property("Status");
+                                res.body.should.to.have.own.property("Error");
+                                res.body.should.to.have.not.own.property("Wildfowl");
+                                res.body.Status.should.be.equal(1);
+                                res.body.Error.should.be.equal("Email already exists!");
+                                done();
+                                resolve();
+                            });
+                    });
+                })
+                .then(() => {
+                    // remove fake client
+                    Client.find({email: emailForTest}).remove().exec();
                 })
                 .catch((err) => console.error(err.stack));
         });

@@ -9,9 +9,10 @@ const
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
 
-    config = require('config');
-    // db = require('sqlite/legacy'),
-    // Promise = require('bluebird');
+    config = require('config'),
+    mongoose = require('mongoose');
+
+require("./api/models/client");
 
 const
     index = require('./routes/index'),
@@ -24,24 +25,7 @@ const
     psCheckoutServiceAPI = require('./api/routes/partner-service/checkout-service');
 
 const app = express();
-
-// Prepare database for work
-// Promise.resolve()
-//     .then(() => {
-//         db.open(config.database.file);
-//         app.set('db', db);
-//     })
-//     .then(() => {
-//         db.migrate({force: 'last', cache: false});
-//         app.set('db', db);
-//     })
-//     .catch((err) => console.error(err.stack));
-
-// var sqlite3 = require('sqlite3').verbose();
-// var db = new sqlite3.Database(':memory:');
-// var db = new sqlite3.Database(config.database.file);
-// var migration = require('db-migrate-sqlite3/index');
-// var dbm = require('db-')
+mongoose.Promise = require('bluebird');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -70,13 +54,13 @@ app.use("/PartnerService/CheckoutService", psCheckoutServiceAPI);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error("Not Found");
+    let err = new Error("Not Found");
     err.status = 404;
     next(err);
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

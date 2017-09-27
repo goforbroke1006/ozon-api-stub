@@ -1,5 +1,7 @@
 {
   "database": {
-    "file": "./data/dev20.sqlite"
+    "host": "127.0.0.1",
+    "port": "27017",
+    "name": "oas-dev"
   }
 }
