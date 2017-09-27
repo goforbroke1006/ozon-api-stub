@@ -11,33 +11,34 @@ let mocha = require("mocha"),
     Promise = require("bluebird"),
     describe = mocha.describe,
     it = mocha.it,
+    before = mocha.before,
     beforeEach = mocha.beforeEach,
     afterEach = mocha.afterEach;
 
 chai.use(chaiHttp);
 
+let ClientModel = null;
+
 describe("PartnerService -> ClientService", () => {
+    before(() => {
+        ClientModel = app.get("db").model("client");
+    });
+
     beforeEach(() => {
-        let Client = app.get("db").model("client");
-        Client.find({}).remove().exec();
+        ClientModel.find({}).remove().exec();
     });
 
     afterEach(() => {
-        let Client = app.get("db").model("client");
-        Client.find({}).remove().exec();
+        ClientModel.find({}).remove().exec();
     });
 
     describe("ClientCheckEmail", () => {
         it('should find client with existing email', (done) => {
-
-            let db = app.get("db"),
-                Client = db.model("client");
-
             let emailForTest = "ChuckNorrisWillFindYouO_o@ChuckNorris.ChuckNorris";
 
             Promise.resolve()
                 .then(() => {
-                    let client = new Client({
+                    let client = new ClientModel({
                         partnerClientId: 'pci-001',
                         email: emailForTest,
                         clientPassword: "123456",
@@ -81,8 +82,6 @@ describe("PartnerService -> ClientService", () => {
 
     describe("PartnerClientRegistration", () => {
         it("should do registration with data", (done) => {
-            let Client = app.get("db").model("client");
-
             let emailForTest = "hello.world@hw.org";
 
             Promise.resolve()
