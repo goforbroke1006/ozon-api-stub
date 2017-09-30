@@ -1,7 +1,6 @@
 "use strict";
 
-let express = require("express"),
-    router = express.Router();
+let router = require("express").Router();
 
 /**
  * Parse string like "1:1,10:4,3:5" to map where key is item id and value is count of this item
@@ -26,7 +25,7 @@ let parseCartItems = (itemsStr) => {
 };
 module.exports.parseCartItems = parseCartItems;
 
-router.post("/CartAdd/", (req, res, next) => {
+router.post("/CartAdd/", (req, res) => {
     let client = {
         partnerClientId: "fake-partner-client-id",
     };

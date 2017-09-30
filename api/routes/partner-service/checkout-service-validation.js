@@ -1,7 +1,6 @@
 "use strict";
 
-let express = require("express"),
-    router = express.Router();
+let router = require("express").Router();
 
 router.all("/*", (req, res, next) => {
     let guid = null;
