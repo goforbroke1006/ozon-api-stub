@@ -6,8 +6,8 @@ Ozon has not test environment, so I going to realize my own test app.
 
 ### Requirements
 
-1. Node 4.2.6+
-2. Babel polyfill
+1. Node 5.6.0+
+2. Mongo server
 
 ### Available services
 

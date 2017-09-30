@@ -120,4 +120,25 @@ describe("PartnerService -> ClientService", () => {
         });
     });
 
+    describe("ClientDiscountCodeApply", () => {
+        it("should activate fake code", (done) => {
+            chai.request(server)
+                .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
+                .send({
+                    login: "test",
+                    password: "test",
+                    partnerClientId: 234,
+                    code: "WILDFOWL1000"
+                })
+                .end((err, res) => {
+                    res.body.should.be.a("object");
+                    res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
+                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
+                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
+                    res.body["ClientDiscountCodeApplyForWeb"]["Discount"].should.be.a("number");
+
+                    done();
+                });
+        })
+    });
 });
