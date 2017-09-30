@@ -1,6 +1,6 @@
 "use strict";
 
-let express = require('express'),
+let express = require("express"),
     router = express.Router();
 
 /**
@@ -16,7 +16,7 @@ let parseCartItems = (itemsStr) => {
         if (itemPart.length === 0)
             continue;
         let data = itemPart.split(":");
-        if (data.length !== 2) throw new Error('Bad cart items format!');
+        if (data.length !== 2) throw new Error("Bad cart items format!");
         items.push({
             item: parseInt(data[0]),
             count: parseInt(data[1]),
@@ -26,7 +26,7 @@ let parseCartItems = (itemsStr) => {
 };
 module.exports.parseCartItems = parseCartItems;
 
-router.post('/CartAdd/', (req, res, next) => {
+router.post("/CartAdd/", (req, res, next) => {
     let client = {
         partnerClientId: "fake-partner-client-id",
     };

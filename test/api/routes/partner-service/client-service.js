@@ -37,14 +37,14 @@ describe("PartnerService -> ClientService", () => {
     });
 
     describe("ClientCheckEmail", () => {
-        it('should find client with existing email', (done) => {
+        it("should find client with existing email", (done) => {
             let emailForTest = "ChuckNorrisWillFindYouO_o@ChuckNorris.ChuckNorris";
 
             Promise.resolve()
                 .then(() => {
                     return new Promise((resolve, reject) => {
                         let client = new ClientModel({
-                            partnerClientId: 'pci-001',
+                            partnerClientId: "pci-001",
                             email: emailForTest,
                             clientPassword: "123456",
 

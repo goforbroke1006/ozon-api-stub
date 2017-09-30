@@ -1,9 +1,8 @@
 "use strict";
 
-let express = require('express'),
-    router = express.Router();
+let router = require("express").Router();
 
-router.post('/ClientCheckEmail/', (req, res) => {
+router.post("/ClientCheckEmail/", (req, res) => {
     const ClientModel = req.app.get("db").model("client");
 
     ClientModel.findOne({}).then(function (client) {
@@ -16,7 +15,7 @@ router.post('/ClientCheckEmail/', (req, res) => {
     });
 });
 
-router.post('/PartnerClientRegistration/', (req, res) => {
+router.post("/PartnerClientRegistration/", (req, res) => {
     const ClientModel = req.app.get("db").model("client");
     let client = new ClientModel(req.body);
     let error = client.validateSync();

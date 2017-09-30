@@ -21,5 +21,4 @@ let ClientSchema = new Schema({
     SpamSubscribe: Boolean,
 });
 
-// module.exports = mongoose.model('Client', ClientSchema);
-module.exports = mongoose.model('client', ClientSchema);
+module.exports = mongoose.model("client", ClientSchema);

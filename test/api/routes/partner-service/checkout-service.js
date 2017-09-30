@@ -27,7 +27,7 @@ describe("PartnerService -> CheckoutService", () => {
                 .send(clientData)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('object');
+                    res.body.should.be.a("object");
                     res.body.Status.should.to.equal(2);
                     done();
                 });
@@ -47,9 +47,9 @@ describe("PartnerService -> CheckoutService", () => {
                 .send(clientData)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('object');
+                    res.body.should.be.a("object");
                     res.body.Status.should.to.equal(2);
-                    res.body.FavouriteItems.should.be.a('array');
+                    res.body.FavouriteItems.should.be.a("array");
                     done();
                 });
         })
@@ -69,7 +69,7 @@ describe("PartnerService -> CheckoutService", () => {
                 .end((err, res) => {
                     res.should.have.status(200);
 
-                    res.body.should.be.a('object');
+                    res.body.should.be.a("object");
                     res.body.should.to.have.own.property("Status");
                     res.body.should.to.have.own.property("AreaGroupCollection");
 

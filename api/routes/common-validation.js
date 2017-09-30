@@ -1,11 +1,11 @@
 "use strict";
 
-let express = require('express'),
+let express = require("express"),
     router = express.Router();
 
 // TODO: validate login & password API params
 
-router.all('/*', (req, res, next) => {
+router.all("/*", (req, res, next) => {
     let partnerClientId = null;
     if (undefined !== req.query.partnerClientId)
         partnerClientId = req.query.partnerClientId;
@@ -14,11 +14,11 @@ router.all('/*', (req, res, next) => {
 
     if (
         (
-            typeof partnerClientId === 'string'
+            typeof partnerClientId === "string"
             || partnerClientId instanceof String
         )
         && partnerClientId.length === 0) {
-        let error = new Error('Unexpected empty partnerClientId');
+        let error = new Error("Unexpected empty partnerClientId");
         error.status = 401;
         next(error);
     }
@@ -27,7 +27,7 @@ router.all('/*', (req, res, next) => {
     const client = null;
 
     if (null !== client) {
-        // next(new Error('Not found client with id = ' + partnerClientId));
+        // next(new Error("Not found client with id = " + partnerClientId));
     }
 
     next();

@@ -1,10 +1,8 @@
-const
-    express = require('express'),
-    router = express.Router();
+const router = require("express").Router();
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Ozon API stub'});
+router.get("/", function (req, res, next) {
+    res.render("index", {title: "Ozon API stub"});
 });
 
 module.exports = router;

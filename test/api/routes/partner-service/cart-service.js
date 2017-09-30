@@ -41,7 +41,7 @@ describe("PartnerService -> CartService", () => {
                 .send(clientData)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('object');
+                    res.body.should.be.a("object");
                     res.body["Status"].should.to.equal(2);
                     res.body["Url"].should.not.be.empty;
                     done();
