@@ -47,4 +47,17 @@ router.post('/PartnerClientRegistration/', (req, res) => {
         });
 });
 
+router.post("/ClientDiscountCodeApply/", (req, res) => {
+    res.json({
+        Status: 2,
+        ClientDiscountCodeApplyForWeb: {
+            Discount: 0,
+            Result: 0,
+            DiscountValue: 100,
+            Moment: "26.07.2017 11:42:42",
+            Message: "В течение 5 минут мы зачислим <#PercentValue#> Р на ваш пользовательский счёт.",
+        }
+    }); // TODO: realize me!
+});
+
 module.exports = router;

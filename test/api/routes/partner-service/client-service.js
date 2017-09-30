@@ -20,6 +20,10 @@ chai.use(chaiHttp);
 let ClientModel = null;
 
 describe("PartnerService -> ClientService", () => {
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
     before(() => {
         ClientModel = app.get("db").model("client");
     });
@@ -38,18 +42,22 @@ describe("PartnerService -> ClientService", () => {
 
             Promise.resolve()
                 .then(() => {
-                    let client = new ClientModel({
-                        partnerClientId: 'pci-001',
-                        email: emailForTest,
-                        clientPassword: "123456",
+                    return new Promise((resolve, reject) => {
+                        let client = new ClientModel({
+                            partnerClientId: 'pci-001',
+                            email: emailForTest,
+                            clientPassword: "123456",
 
-                        lastName: "Some last name",
-                        firstName: "Some first name",
-                        middleName: "",
+                            lastName: "Some last name",
+                            firstName: "Some first name",
+                            middleName: "",
 
-                        SpamSubscribe: 1,
+                            SpamSubscribe: 1,
+                        });
+                        client.save(function (err, client) {
+                            if (err) reject(); else resolve();
+                        });
                     });
-                    client.save();
                 })
                 .then(() => {
                     let clientData = {
@@ -122,22 +130,51 @@ describe("PartnerService -> ClientService", () => {
 
     describe("ClientDiscountCodeApply", () => {
         it("should activate fake code", (done) => {
-            chai.request(server)
-                .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
-                .send({
-                    login: "test",
-                    password: "test",
-                    partnerClientId: 234,
-                    code: "WILDFOWL1000"
-                })
-                .end((err, res) => {
-                    res.body.should.be.a("object");
-                    res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
-                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
-                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
-                    res.body["ClientDiscountCodeApplyForWeb"]["Discount"].should.be.a("number");
+            let fakePartnerClientId = "pci-007";
 
-                    done();
+            Promise.resolve()
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        let client = new ClientModel({
+                            partnerClientId: fakePartnerClientId,
+                            email: "some-wildfowl@tra.ta.ta",
+                            clientPassword: "123456",
+
+                            lastName: "Some last name",
+                            firstName: "Some first name",
+                            middleName: "",
+
+                            SpamSubscribe: 1,
+                        });
+                        client.save(function (err, client) {
+                            if (err) reject(); else resolve();
+                        });
+                    });
+                })
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        let randPromoCodeDiscountValue = randomInt(100, 5000);
+                        chai.request(server)
+                            .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
+                            .send({
+                                login: "test",
+                                password: "test",
+                                partnerClientId: fakePartnerClientId,
+                                code: "WILDFOWL" + randPromoCodeDiscountValue
+                            })
+                            .end((err, res) => {
+                                res.body.should.be.a("object");
+                                res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
+                                res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
+                                res.body["ClientDiscountCodeApplyForWeb"]["Discount"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["Result"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["DiscountValue"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["DiscountValue"].should.be.equal(randPromoCodeDiscountValue);
+
+                                resolve();
+                                done();
+                            });
+                    });
                 });
         })
     });
