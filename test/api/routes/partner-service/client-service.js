@@ -7,6 +7,7 @@ let mocha = require("mocha"),
     chaiHttp = require("chai-http"),
     server = require("./../../../../bin/www").server,
     app = require("./../../../../bin/www").app,
+    utils = require("./../../../../utils"),
     should = chai.should(),
     Promise = require("bluebird"),
     describe = mocha.describe,
@@ -20,10 +21,6 @@ chai.use(chaiHttp);
 let ClientModel = null;
 
 describe("PartnerService -> ClientService", () => {
-    function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-
     before(() => {
         ClientModel = app.get("db").model("client");
     });
@@ -153,7 +150,7 @@ describe("PartnerService -> ClientService", () => {
                 })
                 .then(() => {
                     return new Promise((resolve, reject) => {
-                        let randPromoCodeDiscountValue = randomInt(100, 5000);
+                        let randPromoCodeDiscountValue = utils.randomInt(100, 5000);
                         chai.request(server)
                             .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
                             .send({

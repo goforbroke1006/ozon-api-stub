@@ -17,8 +17,8 @@ describe("PartnerService -> CheckoutService", () => {
     describe("CheckoutStart", () => {
         it("should to start order building and return GUID", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 isPredRelease: false,
             };
@@ -36,8 +36,8 @@ describe("PartnerService -> CheckoutService", () => {
     describe("CheckoutFavouritesGet", () => {
         it("should to return list of favorite delivery points", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 isPredRelease: false,
                 guidValue: "irjgfiuehgiur",
@@ -57,8 +57,8 @@ describe("PartnerService -> CheckoutService", () => {
     describe("DeliveryAddressesGet", () => {
         it("should to return list of regions", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 isPredRelease: false,
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
@@ -82,8 +82,8 @@ describe("PartnerService -> CheckoutService", () => {
     describe("DeliveryVariantsGet", () => {
         it("should to return delivery variants", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
                 addressId: 0,
@@ -109,8 +109,8 @@ describe("PartnerService -> CheckoutService", () => {
     describe("PaymentsVariantsGet", () => {
         it("should to return payment variants", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
                 addressId: 0,

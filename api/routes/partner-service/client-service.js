@@ -47,6 +47,8 @@ router.post("/PartnerClientRegistration/", (req, res) => {
 });
 
 router.post("/ClientDiscountCodeApply/", (req, res) => {
+    console.log(req.client); // current authorised client
+
     res.json({
         Status: 2,
         ClientDiscountCodeApplyForWeb: {
