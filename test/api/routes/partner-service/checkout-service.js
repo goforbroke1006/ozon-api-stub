@@ -5,21 +5,53 @@ process.env.NODE_ENV = "test";
 let chai = require("chai"),
     chaiHttp = require("chai-http"),
     server = require("./../../../../bin/www").server,
-    should = chai.should();
-
-const
-    describe = require("mocha").describe,
-    it = require("mocha").it;
+    app = require("./../../../../bin/www").app,
+    should = chai.should(),
+    mocha = require("mocha"),
+    describe = mocha.describe,
+    it = mocha.it,
+    before = mocha.before,
+    after = mocha.after;
 
 chai.use(chaiHttp);
 
+let ClientModel = null;
+
 describe("PartnerService -> CheckoutService", () => {
+    let fakePartnerClientId = "client-001";
+
+    before(() => {
+        ClientModel = app.get("db").model("client");
+
+        return new Promise((resolve, reject) => {
+            let client = new ClientModel({
+                partnerClientId: fakePartnerClientId,
+                email: "some-wildfowl@tra.ta.ta",
+                clientPassword: "123456",
+
+                lastName: "Some last name",
+                firstName: "Some first name",
+                middleName: "",
+
+                SpamSubscribe: 1,
+            });
+            client.save(function (err, client) {
+                if (err && err.code === 11000) reject(err);
+                else resolve();
+            });
+        });
+    });
+
+    after(() => {
+        ClientModel.find({}).remove().exec();
+    });
+
     describe("CheckoutStart", () => {
         it("should to start order building and return GUID", (done) => {
             let clientData = {
                 login: "test",
                 password: "test",
-                partnerClientId: "user001",
+                partnerClientId: fakePartnerClientId,
                 isPredRelease: false,
             };
             chai.request(server)
@@ -38,7 +70,7 @@ describe("PartnerService -> CheckoutService", () => {
             let clientData = {
                 login: "test",
                 password: "test",
-                partnerClientId: "user001",
+                partnerClientId: fakePartnerClientId,
                 isPredRelease: false,
                 guidValue: "irjgfiuehgiur",
             };
@@ -59,7 +91,7 @@ describe("PartnerService -> CheckoutService", () => {
             let clientData = {
                 login: "test",
                 password: "test",
-                partnerClientId: "user001",
+                partnerClientId: fakePartnerClientId,
                 isPredRelease: false,
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
             };
@@ -84,7 +116,7 @@ describe("PartnerService -> CheckoutService", () => {
             let clientData = {
                 login: "test",
                 password: "test",
-                partnerClientId: "user001",
+                partnerClientId: fakePartnerClientId,
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
                 addressId: 0,
                 areaId: 0,
@@ -111,7 +143,7 @@ describe("PartnerService -> CheckoutService", () => {
             let clientData = {
                 login: "test",
                 password: "test",
-                partnerClientId: "user001",
+                partnerClientId: fakePartnerClientId,
                 guidValue: "asdwad-s-ds-ds-dsd-sds-d-s-d-sdsdsf",
                 addressId: 0,
                 areaId: 0,

@@ -5,8 +5,6 @@ const router = require("express").Router(),
     utils = require("./../../utils");
 
 router.all("/*", (req, res, next) => {
-    console.log(typeof req.__proto__);
-
     let login = utils.pullGetOrPostParameter(req, "login"),
         password = utils.pullGetOrPostParameter(req, "password");
     if (!utils.isString(login) || !utils.isString(password)) {
@@ -16,6 +14,14 @@ router.all("/*", (req, res, next) => {
 });
 
 router.all("/*", (req, res, next) => {
+    if (
+        req.originalUrl === "/PartnerService/ClientService/ClientCheckEmail/"
+        || req.originalUrl === "/PartnerService/ClientService/PartnerClientRegistration/"
+    ) {
+        next();
+        return;
+    }
+
     let partnerClientId = utils.pullGetOrPostParameter(req, "partnerClientId");
 
     if (utils.isString(partnerClientId) && partnerClientId.length === 0) {
@@ -29,11 +35,15 @@ router.all("/*", (req, res, next) => {
     ClientModel.findOne({
         partnerClientId: partnerClientId,
     }).then(function (client) {
+        if (!client) {
+            next(new Error("Not found client with id = " + partnerClientId));
+            return;
+        }
+
         req.client = client;
         next();
     }, function (err) {
-        console.log(err);
-        next(new Error("Not found client with id = " + partnerClientId));
+        next(err);
     });
 });
 

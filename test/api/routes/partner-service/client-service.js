@@ -52,7 +52,7 @@ describe("PartnerService -> ClientService", () => {
                             SpamSubscribe: 1,
                         });
                         client.save(function (err, client) {
-                            if (err) reject(); else resolve();
+                            if (err && err.code !== 11000) reject(err); else resolve();
                         });
                     });
                 })
