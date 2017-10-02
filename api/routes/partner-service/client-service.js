@@ -47,4 +47,30 @@ router.post('/PartnerClientRegistration/', (req, res) => {
         });
 });
 
+router.post('/ClientDiscountCodeApply', (req, res) => {
+    const PromoModel = req.app.get('db').model('promo');
+    let promo = new PromoModel(req.body);
+    let error = promo.validateSync();
+    if (error) {
+        res.json({Status:1, Error: error});
+        return;
+    }
+    Promise.resolve()
+        .then(() => {
+            return new Promise((resolve, reject) => {
+                promo.save(function (err, promo) {
+                    if (err) reject(err);
+                    else resolve(promo);
+                });
+            });
+        })
+        .then((promo) => res.json({Status: 2, Error: null}))
+        .catch((err) => {
+            res.json({
+                Status: 1,
+                Error: err.message
+            })
+        });
+});
+
 module.exports = router;

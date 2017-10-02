@@ -1,16 +1,19 @@
 "use static";
 
-let mongoose = required('mongoose');
+let Regex = require('regex');
+let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+
+let regex = new Regex(/(\d+)$/ig);
 
 let PromoSchema = new Schema({
     PromoName: {
         type: String,
         unique: true
     },
-    IsActivated: {
-        type: Boolean,
-        default: false
+    Discount: {
+        type: Number,
+        default: regex.exec(PromoName)
     }
 });
 
