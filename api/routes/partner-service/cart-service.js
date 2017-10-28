@@ -26,6 +26,40 @@ let parseCartItems = (itemsStr) => {
 };
 module.exports.parseCartItems = parseCartItems;
 
+router.get("/CartGet/", (req, res) => {
+    res.json({
+        Status: 2,
+        CartItems: [],
+        CartSummary: {
+            ClientAccount: 0,
+            Discount: 0,
+            DoneMinDate: "15.06.17",
+            FullSum: 3507,
+            FullWeight: 2065,
+            ItemQty: 0,
+            ScoreToAdd: 0,
+            ScoreToPay: 0,
+            ScoreValue: 0,
+            Sum: 3507,
+        },
+        DelayedCartItems: [],
+        PreReleaseCartItems: [],
+        PreReleaseCartSummary: {
+            ClientAccount: 0,
+            Discount: 0,
+            DoneMinDate: null,
+            FullSum: 0,
+            FullWeight: 0,
+            ItemQty: 0,
+            ScoreToAdd: 0,
+            ScoreToPay: 0,
+            ScoreValue: 0,
+            Sum: 0,
+        },
+        ProposalCartItems: [],
+    });
+});
+
 router.post('/CartAdd/', (req, res, next) => {
     let client = {
         partnerClientId: "fake-partner-client-id",

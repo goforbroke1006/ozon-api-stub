@@ -19,6 +19,7 @@ const
     users = require('./routes/users');
 
 const
+    psItemGroupServiceAPI = require('./api/routes/partner-service/item-group-service'),
     psClientServiceAPI = require('./api/routes/partner-service/client-service'),
     psCartServiceAPI = require('./api/routes/partner-service/cart-service'),
     psCheckoutServiceValidationAPI = require('./api/routes/partner-service/checkout-service-validation'),
@@ -47,6 +48,7 @@ app.use('/users', users);
 // API routes
 app.use("/PartnerService", require("./api/routes/common-validation"));
 
+app.use("/PartnerService/ItemGroupService", psItemGroupServiceAPI.router);
 app.use("/PartnerService/ClientService", psClientServiceAPI);
 app.use("/PartnerService/CartService", psCartServiceAPI.router);
 app.use("/PartnerService/CheckoutService", psCheckoutServiceValidationAPI);
