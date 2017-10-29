@@ -15,7 +15,7 @@ router.post("/ItemAvailabilitiesGet/", function (req, res) {
     });
 });
 
-router.get("/ItemGet/", function (req, res, err) {
+router.get("/ItemGet/", function (req, res, next) {
     const ItemModel = req.app.get("db").model("item");
 
     // console.log(req.query.ItemId);
