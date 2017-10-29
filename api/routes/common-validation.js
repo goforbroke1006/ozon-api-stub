@@ -5,8 +5,8 @@ const router = require("express").Router(),
     utils = require("./../../utils");
 
 router.all("/*", (req, res, next) => {
-    let login = utils.pullGetOrPostParameter(req, "login"),
-        password = utils.pullGetOrPostParameter(req, "password");
+    let login = httpUtils.getRequestParam(req, "login"),
+        password = httpUtils.getRequestParam(req, "password");
     if (!utils.isString(login) || !utils.isString(password)) {
         next(new Error("You should to define your partner's login and password"));
     }
@@ -24,7 +24,7 @@ router.all('/*', (req, res, next) => {
 
     let partnerClientId = httpUtils.getRequestParam(req, "partnerClientId");
 
-    if ((utils.isEmpty(partnerClientId)) {
+    if (utils.isEmpty(partnerClientId)) {
         let error = new Error('Unexpected empty partnerClientId');
         error.status = 401;
         next(error);

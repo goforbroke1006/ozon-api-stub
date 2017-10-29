@@ -14,7 +14,7 @@ const
     mongoose = require("mongoose");
 
 // Load mongoose's models
-require("./api/models/client");
+require("./models/client");
 require("./api/models/promo");
 require("./models/item");
 

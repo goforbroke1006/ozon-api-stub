@@ -28,7 +28,7 @@ router.post("/PartnerClientRegistration/", (req, res) => {
         return;
     }
     Promise.resolve()
-        // save to DB
+    // save to DB
         .then(() => {
             return new Promise((resolve, reject) => {
                 client.save(function (err, client) {
@@ -60,7 +60,7 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
 
     let error = promo.validateSync();
     if (error) {
-        res.json({Status:1, Error: error});
+        res.json({Status: 1, Error: error});
         return;
     }
     Promise.resolve()
@@ -75,9 +75,13 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
         .then((promo) => res.json({
             Status: 2,
             Error: null,
-            ClientDiscountCodeApplyForWeb:
-                promo,
-                Discount: promo.Discount,
+            ClientDiscountCodeApplyForWeb: {
+                Discount: 0,
+                Result: 0,
+                DiscountValue: promo.Discount,
+                Moment: "26.07.2017 11:42:42",
+                Message: "В течение 5 минут мы зачислим <#PercentValue#> Р на ваш пользовательский счёт.",
+            }
         }))
         .catch((err) => {
             res.json({
@@ -85,22 +89,6 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
                 Error: err.message
             })
         });
-});
-
-router.post("/ClientDiscountCodeApply/", (req, res) => {
-    // current authorised client
-    // console.log(req.client);
-
-    res.json({
-        Status: 2,
-        ClientDiscountCodeApplyForWeb: {
-            Discount: 0,
-            Result: 0,
-            DiscountValue: 100,
-            Moment: "26.07.2017 11:42:42",
-            Message: "В течение 5 минут мы зачислим <#PercentValue#> Р на ваш пользовательский счёт.",
-        }
-    }); // TODO: realize me!
 });
 
 module.exports = router;
