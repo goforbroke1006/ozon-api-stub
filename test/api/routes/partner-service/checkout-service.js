@@ -11,7 +11,9 @@ let chai = require("chai"),
     describe = mocha.describe,
     it = mocha.it,
     before = mocha.before,
-    after = mocha.after;
+    after = mocha.after,
+    beforeEach = mocha.beforeEach,
+    afterEach = mocha.afterEach;
 
 chai.use(chaiHttp);
 
@@ -22,6 +24,7 @@ describe("PartnerService -> CheckoutService", () => {
 
     before(() => {
         ClientModel = app.get("db").model("client");
+        ClientModel.find({}).remove().exec();
 
         return new Promise((resolve, reject) => {
             let client = new ClientModel({
