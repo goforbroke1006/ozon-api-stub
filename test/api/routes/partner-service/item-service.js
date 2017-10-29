@@ -21,12 +21,13 @@ chai.use(chaiHttp);
 let ItemModel = null;
 let ClientModel = null;
 
-describe("PartnerService -> ClientService", () => {
+describe("PartnerService -> ItemService", () => {
     let fakePartnerClientId = "client-001";
 
     before(() => {
-        ClientModel = app.get("db").model("client");
-        ItemModel = app.get("db").model("item");
+        let db = app.get("db");
+        ClientModel = db.model("client");
+        ItemModel = db.model("item");
 
         Promise.resolve()
             .then(() => {
