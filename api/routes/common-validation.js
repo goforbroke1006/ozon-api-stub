@@ -2,21 +2,16 @@
 
 let express = require("express"),
     router = express.Router(),
-    httpUtils = require("./../../httpUtils");
+    httpUtils = require("./../../httpUtils"),
+    utils = require("./../../utils");
 
 // TODO: validate login & password API params
 
 
 router.all("/*", (req, res, next) => {
-    let partnerClientId = null;
-    partnerClientId = httpUtils.getRequestParam(req, "partnerClientId");
+    let partnerClientId = httpUtils.getRequestParam(req, "partnerClientId");
 
-    if (
-        (
-            typeof partnerClientId === "string"
-            || partnerClientId instanceof String
-        )
-        && partnerClientId.length === 0) {
+    if (utils.isEmpty(partnerClientId)) {
         let error = new Error("Unexpected empty partnerClientId");
         error.status = 401;
         next(error);
