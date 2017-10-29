@@ -24,6 +24,7 @@ describe("PartnerService -> CheckoutService", () => {
 
     before(() => {
         ClientModel = app.get("db").model("client");
+
         ClientModel.find({}).remove().exec();
 
         return new Promise((resolve, reject) => {

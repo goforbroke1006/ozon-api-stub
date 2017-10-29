@@ -29,6 +29,9 @@ describe("PartnerService -> ItemService", () => {
         ClientModel = db.model("client");
         ItemModel = db.model("item");
 
+        ClientModel.find({}).remove().exec();
+        ItemModel.find({}).remove().exec();
+
         Promise.resolve()
             .then(() => {
                 return new Promise((resolve, reject) => {

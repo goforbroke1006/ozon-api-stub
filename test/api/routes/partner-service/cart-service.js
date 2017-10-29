@@ -24,6 +24,9 @@ describe("PartnerService -> CartService", () => {
 
     before(() => {
         ClientModel = app.get("db").model("client");
+
+        ClientModel.find({}).remove().exec();
+
         return new Promise((resolve, reject) => {
             let client = new ClientModel({
                 partnerClientId: fakePartnerClientId,
