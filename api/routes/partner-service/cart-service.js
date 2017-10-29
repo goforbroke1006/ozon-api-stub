@@ -71,4 +71,10 @@ router.post('/CartAdd/', (req, res, next) => {
     }); // TODO: realize me!!
 });
 
+router.post("/CartRemove/", function (req, res) {
+    res.json({
+        Status: 2,
+    });
+});
+
 module.exports.router = router;

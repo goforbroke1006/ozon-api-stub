@@ -18,18 +18,17 @@ router.post('/ClientCheckEmail/', (req, res) => {
 
 router.post('/PartnerClientRegistration/', (req, res) => {
     const ClientModel = req.app.get("db").model("client");
+
+    // get client data from POST request body
     let client = new ClientModel(req.body);
     let error = client.validateSync();
     if (!!error) {
         let errMsg = "";
-        /*for (let prop in error.errors) {
-            if (!error.errors.hasOwnProperty(prop)) continue;
-            errMsg += error.errors[prop];
-        }*/
         res.json({Status: 1, Error: errMsg});
         return;
     }
     Promise.resolve()
+        // save to DB
         .then(() => {
             return new Promise((resolve, reject) => {
                 client.save(function (err, client) {
@@ -38,7 +37,9 @@ router.post('/PartnerClientRegistration/', (req, res) => {
                 });
             });
         })
+        // send response
         .then((client) => res.json({Status: 2, Error: null}))
+        // send response with error description
         .catch((err) => {
             res.json({
                 Status: 1,
