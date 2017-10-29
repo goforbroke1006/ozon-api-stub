@@ -131,7 +131,6 @@ describe("PartnerService -> ClientService", () => {
                     code: "WILDFOWL1000"
                 })
                 .end((err, res) => {
-                    res.should.have.status(200);
                     res.body.should.be.a("object");
                     res.body["Status"].should.be.equal(2);
                     res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
