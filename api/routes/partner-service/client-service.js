@@ -1,10 +1,9 @@
 "use strict";
 
-let express = require('express'),
-    reg = require('regex'),
-    router = express.Router();
+let router = require("express").Router(),
+    reg = require('regex');
 
-router.post('/ClientCheckEmail/', (req, res) => {
+router.post("/ClientCheckEmail/", (req, res) => {
     const ClientModel = req.app.get("db").model("client");
 
     ClientModel.findOne({}).then(function (client) {
@@ -17,7 +16,7 @@ router.post('/ClientCheckEmail/', (req, res) => {
     });
 });
 
-router.post('/PartnerClientRegistration/', (req, res) => {
+router.post("/PartnerClientRegistration/", (req, res) => {
     const ClientModel = req.app.get("db").model("client");
 
     // get client data from POST request body
@@ -86,6 +85,22 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
                 Error: err.message
             })
         });
+});
+
+router.post("/ClientDiscountCodeApply/", (req, res) => {
+    // current authorised client
+    // console.log(req.client);
+
+    res.json({
+        Status: 2,
+        ClientDiscountCodeApplyForWeb: {
+            Discount: 0,
+            Result: 0,
+            DiscountValue: 100,
+            Moment: "26.07.2017 11:42:42",
+            Message: "В течение 5 минут мы зачислим <#PercentValue#> Р на ваш пользовательский счёт.",
+        }
+    }); // TODO: realize me!
 });
 
 module.exports = router;

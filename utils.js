@@ -20,5 +20,15 @@ module.exports = {
         if (null === val) return true;
         if ((this.isString(val) || Array.isArray(val)) && 0 === val.length) return true;
         return false === (!!val);
+    },
+
+    /**
+     * Get random number
+     * @param {Number} min
+     * @param {Number} max
+     * @returns {Number}
+     */
+    randomInt: function (min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 };

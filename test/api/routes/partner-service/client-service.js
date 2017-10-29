@@ -7,6 +7,7 @@ let mocha = require("mocha"),
     chaiHttp = require("chai-http"),
     server = require("./../../../../bin/www").server,
     app = require("./../../../../bin/www").app,
+    utils = require("./../../../../utils"),
     should = chai.should(),
     Promise = require("bluebird"),
     describe = mocha.describe,
@@ -33,23 +34,27 @@ describe("PartnerService -> ClientService", () => {
     });
 
     describe("ClientCheckEmail", () => {
-        it('should find client with existing email', (done) => {
+        it("should find client with existing email", (done) => {
             let emailForTest = "ChuckNorrisWillFindYouO_o@ChuckNorris.ChuckNorris";
 
             Promise.resolve()
                 .then(() => {
-                    let client = new ClientModel({
-                        partnerClientId: 'pci-001',
-                        email: emailForTest,
-                        clientPassword: "123456",
+                    return new Promise((resolve, reject) => {
+                        let client = new ClientModel({
+                            partnerClientId: "pci-001",
+                            email: emailForTest,
+                            clientPassword: "123456",
 
-                        lastName: "Some last name",
-                        firstName: "Some first name",
-                        middleName: "",
+                            lastName: "Some last name",
+                            firstName: "Some first name",
+                            middleName: "",
 
-                        SpamSubscribe: 1,
+                            SpamSubscribe: 1,
+                        });
+                        client.save(function (err, client) {
+                            if (err && err.code !== 11000) reject(err); else resolve();
+                        });
                     });
-                    client.save();
                 })
                 .then(() => {
                     let clientData = {
@@ -122,23 +127,51 @@ describe("PartnerService -> ClientService", () => {
 
     describe("ClientDiscountCodeApply", () => {
         it("should activate fake code", (done) => {
-            chai.request(server)
-                .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
-                .send({
-                    login: "test",
-                    password: "test",
-                    partnerClientId: 234,
-                    code: "WILDFOWL1000"
-                })
-                .end((err, res) => {
-                    res.body.should.be.a("object");
-                    res.body["Status"].should.be.equal(2);
-                    res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
-                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
-                    res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
-                    res.body["ClientDiscountCodeApplyForWeb"]["Discount"].should.be.a("number");
+            let fakePartnerClientId = "pci-007";
 
-                    done();
+            Promise.resolve()
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        let client = new ClientModel({
+                            partnerClientId: fakePartnerClientId,
+                            email: "some-wildfowl@tra.ta.ta",
+                            clientPassword: "123456",
+
+                            lastName: "Some last name",
+                            firstName: "Some first name",
+                            middleName: "",
+
+                            SpamSubscribe: 1,
+                        });
+                        client.save(function (err, client) {
+                            if (err) reject(); else resolve();
+                        });
+                    });
+                })
+                .then(() => {
+                    return new Promise((resolve, reject) => {
+                        let randPromoCodeDiscountValue = utils.randomInt(100, 5000);
+                        chai.request(server)
+                            .post("/PartnerService/ClientService/ClientDiscountCodeApply/")
+                            .send({
+                                login: "test",
+                                password: "test",
+                                partnerClientId: fakePartnerClientId,
+                                code: "WILDFOWL" + randPromoCodeDiscountValue
+                            })
+                            .end((err, res) => {
+                                res.body.should.be.a("object");
+                                res.body.should.to.have.own.property("ClientDiscountCodeApplyForWeb");
+                                res.body["ClientDiscountCodeApplyForWeb"].should.be.a("object");
+                                res.body["ClientDiscountCodeApplyForWeb"]["Discount"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["Result"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["DiscountValue"].should.be.a("number");
+                                res.body["ClientDiscountCodeApplyForWeb"]["DiscountValue"].should.be.equal(randPromoCodeDiscountValue);
+
+                                resolve();
+                                done();
+                            });
+                    });
                 });
         })
     });

@@ -1,7 +1,6 @@
 "use strict";
 
-let express = require('express'),
-    router = express.Router();
+let router = require("express").Router();
 
 /**
  * Parse string like "1:1,10:4,3:5" to map where key is item id and value is count of this item
@@ -16,7 +15,7 @@ let parseCartItems = (itemsStr) => {
         if (itemPart.length === 0)
             continue;
         let data = itemPart.split(":");
-        if (data.length !== 2) throw new Error('Bad cart items format!');
+        if (data.length !== 2) throw new Error("Bad cart items format!");
         items.push({
             item: parseInt(data[0]),
             count: parseInt(data[1]),

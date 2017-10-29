@@ -1,13 +1,15 @@
 "use strict";
 
-let express = require('express'),
-    router = express.Router();
+let router = require("express").Router();
 
-router.get('/CheckoutStart/', (req, res, next) => {
-    res.json({Status: 2, OrderGuid: "AAAAAA-666-ZZZ-0000"}); // TODO: realize me!!
+router.get("/CheckoutStart/", (req, res) => {
+    res.json({
+        Status: 2,
+        OrderGuid: "AAAAAA-666-ZZZ-0000"
+    }); // TODO: realize me!!
 });
 
-router.get('/CheckoutFavouritesGet/', (req, res, next) => {
+router.get("/CheckoutFavouritesGet/", (req, res) => {
     res.json({
         Status: 2,
         FavouriteItems: [
@@ -47,14 +49,14 @@ router.get('/CheckoutFavouritesGet/', (req, res, next) => {
     }); // TODO: realize me!!
 });
 
-router.get('/DeliveryAddressesGet/', (req, res, next) => {
+router.get("/DeliveryAddressesGet/", (req, res) => {
     res.json({
         Status: 2,
         AreaGroupCollection: "Moscow"
     }); // TODO: realize me!!
 });
 
-router.get('/DeliveryVariantsGet/', (req, res, next) => {
+router.get("/DeliveryVariantsGet/", (req, res) => {
     res.json({
         Status: 2,
         DeliveryModel: {
@@ -163,7 +165,7 @@ router.get('/DeliveryVariantsGet/', (req, res, next) => {
     }); // TODO: realize me!!
 });
 
-router.get('/PaymentsVariantsGet/', (req, res, next) => {
+router.get("/PaymentsVariantsGet/", (req, res) => {
     res.json({
         Status: 2,
         PaymentGroups: [
@@ -188,9 +190,9 @@ router.get('/PaymentsVariantsGet/', (req, res, next) => {
     }); // TODO: realize me!!
 });
 
-router.get('/AreasByZipCode/', (req, res, next) => {
+router.get("/AreasByZipCode/", (req, res, next) => {
     if (undefined === req.query.zipCode || 0 === req.query.zipCode.length) {
-        let error = new Error('You should to define zipCode!');
+        let error = new Error("You should to define zipCode!");
         error.status = 400;
         next(error)
     }
