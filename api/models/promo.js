@@ -1,20 +1,18 @@
-"use static";
+"use strict";
 
-let Regex = require('regex');
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-let regex = new Regex(/(\d+)$/ig);
 
-let PromoSchema = new Schema({
+let DiscountCode = new Schema({
     PromoName: {
         type: String,
         unique: true
     },
     Discount: {
         type: Number,
-        default: regex.exec(PromoName)
+        required: true
     }
 });
 
-module.exports = mongoose.model('promo', PromoSchema);
+module.exports = mongoose.model('promo', DiscountCode);

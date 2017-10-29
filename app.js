@@ -13,6 +13,7 @@ const
     mongoose = require('mongoose');
 
 require("./api/models/client");
+require("./api/models/promo");
 
 const
     index = require('./routes/index'),

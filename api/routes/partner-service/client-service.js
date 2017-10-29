@@ -1,6 +1,7 @@
 "use strict";
 
 let express = require('express'),
+    reg = require('regex'),
     router = express.Router();
 
 router.post('/ClientCheckEmail/', (req, res) => {
@@ -48,8 +49,15 @@ router.post('/PartnerClientRegistration/', (req, res) => {
 });
 
 router.post('/ClientDiscountCodeApply', (req, res) => {
+    let re = /(\d+)$/;
+    let code = req.body.code;
+    let discount = Number(code.match(re)[0]);
+
     const PromoModel = req.app.get('db').model('promo');
-    let promo = new PromoModel(req.body);
+    let promo = new PromoModel();
+    promo.PromoName = code;
+    promo.Discount = discount;
+
     let error = promo.validateSync();
     if (error) {
         res.json({Status:1, Error: error});
@@ -64,7 +72,13 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
                 });
             });
         })
-        .then((promo) => res.json({Status: 2, Error: null}))
+        .then((promo) => res.json({
+            Status: 2,
+            Error: null,
+            ClientDiscountCodeApplyForWeb:
+                promo,
+                Discount: promo.Discount,
+        }))
         .catch((err) => {
             res.json({
                 Status: 1,
