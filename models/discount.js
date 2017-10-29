@@ -5,7 +5,7 @@ let Schema = mongoose.Schema;
 
 
 let DiscountCode = new Schema({
-    PromoName: {
+    CodeName: {
         type: String,
         unique: true
     },
@@ -15,4 +15,4 @@ let DiscountCode = new Schema({
     }
 });
 
-module.exports = mongoose.model('promo', DiscountCode);
+module.exports = mongoose.model('discountcode', DiscountCode);

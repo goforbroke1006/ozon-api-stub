@@ -53,12 +53,12 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
     let code = req.body.code;
     let discount = Number(code.match(re)[0]);
 
-    const PromoModel = req.app.get('db').model('promo');
-    let promo = new PromoModel();
-    promo.PromoName = code;
-    promo.Discount = discount;
+    const DiscountModel = req.app.get('db').model('discountcode');
+    let disc = new DiscountModel();
+    disc.CodeName = code;
+    disc.Discount = discount;
 
-    let error = promo.validateSync();
+    let error = disc.validateSync();
     if (error) {
         res.json({Status: 1, Error: error});
         return;
@@ -66,21 +66,21 @@ router.post('/ClientDiscountCodeApply', (req, res) => {
     Promise.resolve()
         .then(() => {
             return new Promise((resolve, reject) => {
-                promo.save(function (err, promo) {
+                disc.save(function (err, disc) {
                     if (err) reject(err);
-                    else resolve(promo);
+                    else resolve(disc);
                 });
             });
         })
-        .then((promo) => res.json({
+        .then((disc) => res.json({
             Status: 2,
             Error: null,
             ClientDiscountCodeApplyForWeb: {
                 Discount: 0,
                 Result: 0,
-                DiscountValue: promo.Discount,
-                Moment: "26.07.2017 11:42:42",
-                Message: "В течение 5 минут мы зачислим <#PercentValue#> Р на ваш пользовательский счёт.",
+                DiscountValue: disc.Discount,
+                Moment: Date.now(),
+                Message: "В течение 5 минут мы зачислим" + disc.Discount + "Р на ваш пользовательский счёт.",
             }
         }))
         .catch((err) => {

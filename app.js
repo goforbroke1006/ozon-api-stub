@@ -15,7 +15,7 @@ const
 
 // Load mongoose's models
 require("./models/client");
-require("./api/models/promo");
+require("./models/discount");
 require("./models/item");
 
 const
