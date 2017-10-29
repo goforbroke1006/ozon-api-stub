@@ -29,8 +29,8 @@ describe("PartnerService -> CartService", () => {
 
         it("should to start order building and return GUID", (done) => {
             let clientData = {
-                login: "",
-                password: "",
+                login: "test",
+                password: "test",
                 partnerClientId: "user001",
                 cartItems: "1:1,2:1",
                 partnerAgentId: null,

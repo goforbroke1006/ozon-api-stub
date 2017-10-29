@@ -19,6 +19,6 @@ module.exports = {
         if (undefined === val) return true;
         if (null === val) return true;
         if ((this.isString(val) || Array.isArray(val)) && 0 === val.length) return true;
-        return !!val;
+        return false === (!!val);
     }
 };
