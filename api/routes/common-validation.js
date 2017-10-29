@@ -1,24 +1,23 @@
 "use strict";
 
-let express = require('express'),
-    router = express.Router();
+let express = require("express"),
+    router = express.Router(),
+    httpUtils = require("./../../httpUtils");
 
 // TODO: validate login & password API params
 
-router.all('/*', (req, res, next) => {
+
+router.all("/*", (req, res, next) => {
     let partnerClientId = null;
-    if (undefined !== req.query.partnerClientId)
-        partnerClientId = req.query.partnerClientId;
-    if (undefined !== req.body.partnerClientId)
-        partnerClientId = req.body.partnerClientId;
+    partnerClientId = httpUtils.getRequestParam(req, "partnerClientId");
 
     if (
         (
-            typeof partnerClientId === 'string'
+            typeof partnerClientId === "string"
             || partnerClientId instanceof String
         )
         && partnerClientId.length === 0) {
-        let error = new Error('Unexpected empty partnerClientId');
+        let error = new Error("Unexpected empty partnerClientId");
         error.status = 401;
         next(error);
     }
