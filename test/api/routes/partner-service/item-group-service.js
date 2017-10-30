@@ -125,7 +125,7 @@ describe("PartnerService -> ItemGroupService", () => {
                                 res.body["TotalItems"].should.be.a("string");
 
                                 res.body.should.to.have.own.property("GoodsItems");
-                                res.body["GoodsItems"].should.be.a("object");
+                                res.body["GoodsItems"].should.be.a("array");
                                 res.body["GoodsItems"]["Name"].should.be.a("string");
                                 res.body["GoodsItems"]["Detail"].should.be.a("string");
                                 res.body["GoodsItems"]["Price"].should.be.a("number");
