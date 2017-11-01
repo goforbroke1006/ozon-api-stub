@@ -14,7 +14,8 @@ let mocha = require("mocha"),
     describe = mocha.describe,
     it = mocha.it,
     before = mocha.before,
-    after = mocha.after;
+    after = mocha.after,
+    len = mocha.length;
 
 chai.use(chaiHttp);
 
@@ -84,7 +85,8 @@ describe("PartnerService -> ItemGroupService", () => {
 
     describe("ItemsRecursiveGet", () => {
         it("should get all products recursively down", (done) => {
-            let fakePartnerClientId = "pci-08";
+            let fakePartnerClientId = "pci-08",
+                fakeItemGroupId = '3';
 
             Promise.resolve()
                 .then(() => {
@@ -114,7 +116,7 @@ describe("PartnerService -> ItemGroupService", () => {
                                 login: 'test',
                                 password: 'test',
                                 partnerClientId: fakePartnerClientId,
-                                startItemGroupId: 3,
+                                startItemGroupId: fakeItemGroupId,
                                 startGroupName: "Fake Products"
                             })
                             .end((err, res) => {
@@ -126,9 +128,11 @@ describe("PartnerService -> ItemGroupService", () => {
 
                                 res.body.should.to.have.own.property("GoodsItems");
                                 res.body["GoodsItems"].should.be.a("array");
-                                res.body["GoodsItems"]["Name"].should.be.a("string");
-                                res.body["GoodsItems"]["Detail"].should.be.a("string");
-                                res.body["GoodsItems"]["Price"].should.be.a("number");
+                                res.body["GoodsItems"].should.have.len(ItemGroupModel.findById(fakeItemGroupId).length);
+
+                                res.body["GoodsItems"][0].should.have.property("Name");
+                                res.body["GoodsItems"][0].should.have.property("Detail");
+                                res.body["GoodsItems"][0].should.have.property("Price");
 
                                 resolve();
                                 done();
